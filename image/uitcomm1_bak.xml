@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:586afc48677dad36e7598e75f90a7a1d$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+-->
+<TextureAtlas imagePath="uicomm1.png" width="1024" height="1024">
+    <sprite n="bjjm_diban01" x="704" y="259" w="210" h="210"/>
+    <sprite n="cjk_anniu03" x="712" y="87" w="310" h="170"/>
+    <sprite n="cjk_anniu04" x="345" y="64" w="310" h="170"/>
+    <sprite n="ckjm_btn01" x="572" y="671" w="90" h="39"/>
+    <sprite n="dljm_btn01" x="664" y="655" w="169" h="55"/>
+    <sprite n="drlj_diban04" x="572" y="619" w="90" h="50"/>
+    <sprite n="dtxx_button_quxiao" x="401" y="676" w="143" h="45"/>
+    <sprite n="dtxx_button_xiazai" x="541" y="388" w="144" h="45"/>
+    <sprite n="fhjm_btn01" x="2" y="556" w="198" h="63"/>
+    <sprite n="fhjm_btn02" x="214" y="536" w="198" h="63"/>
+    <sprite n="ggjr_btn01" x="204" y="914" w="116" h="51"/>
+    <sprite n="ggjr_btn02" x="202" y="601" w="197" h="162"/>
+    <sprite n="hdfl_btn_lq01" x="455" y="887" w="131" h="43"/>
+    <sprite n="hdfl_btn_lq02" x="450" y="932" w="131" h="43"/>
+    <sprite n="hdfl_btn_ty" x="2" y="176" w="294" h="83"/>
+    <sprite n="hdfl_btn_tz" x="317" y="967" w="131" h="44"/>
+    <sprite n="hdfl_btn_xz" x="715" y="2" w="295" h="83"/>
+    <sprite n="hdfl_btn_ylq" x="322" y="887" w="131" h="43"/>
+    <sprite n="hdfl_btnzc01" x="2" y="261" w="252" h="81"/>
+    <sprite n="hdfl_btnzc02" x="298" y="236" w="252" h="81"/>
+    <sprite n="hdfl_diban01" x="359" y="2" w="354" h="60"/>
+    <sprite n="hdfl_gezi01" x="468" y="319" w="71" h="71"/>
+    <sprite n="juese_anniu_huang" x="401" y="619" w="169" h="55"/>
+    <sprite n="juese_anniu_lan" x="2" y="735" w="169" h="55"/>
+    <sprite n="juese_biaoqian01" x="886" y="645" w="131" h="94"/>
+    <sprite n="juese_biaoqian02" x="886" y="549" w="131" h="94"/>
+    <sprite n="juese_diban01" x="2" y="2" w="355" h="60"/>
+    <sprite n="juese_diban02" x="368" y="765" w="120" h="120"/>
+    <sprite n="juese_diban04" x="246" y="765" w="120" h="120"/>
+    <sprite n="juese_diban07" x="124" y="792" w="120" h="120"/>
+    <sprite n="juese_diban08" x="916" y="457" w="90" h="90"/>
+    <sprite n="juese_fengexian" x="214" y="531" w="202" h="3"/>
+    <sprite n="juese_gezi02" x="2" y="914" w="109" h="108"/>
+    <sprite n="juese_gezi04" x="113" y="914" w="89" h="89"/>
+    <sprite n="juese_guanbi01" x="657" y="64" w="53" h="53"/>
+    <sprite n="juese_guanbi02" x="657" y="175" w="31" h="32"/>
+    <sprite n="juese_xuanzhong" x="916" y="259" w="106" h="104"/>
+    <sprite n="juese_xuanzhong02" x="916" y="365" w="90" h="90"/>
+    <sprite n="jyzw_button_cha" x="657" y="119" w="49" h="54"/>
+    <sprite n="mngfg_childdiban01" x="2" y="344" w="210" h="210"/>
+    <sprite n="szjm_btn_hdyx" x="2" y="678" w="169" h="55"/>
+    <sprite n="szjm_btn_hongse" x="677" y="563" w="207" h="90"/>
+    <sprite n="szjm_btn_hongse02" x="2" y="621" w="169" h="55"/>
+    <sprite n="szjm_diban01" x="552" y="236" w="150" h="150"/>
+    <sprite n="szjm_huadongbtn01" x="468" y="392" w="57" h="39"/>
+    <sprite n="szjm_huadongdiban01" x="204" y="967" w="111" h="50"/>
+    <sprite n="universal_btn01" x="468" y="527" w="207" h="90"/>
+    <sprite n="universal_btn02" x="677" y="471" w="207" h="90"/>
+    <sprite n="universal_diban01" x="256" y="319" w="210" h="210"/>
+    <sprite n="universal_qipao" x="2" y="64" w="341" h="110"/>
+    <sprite n="wdcc_icon_ksyx" x="468" y="435" w="207" h="90"/>
+    <sprite n="xsyd_diban01" x="2" y="792" w="120" h="120"/>
+</TextureAtlas>

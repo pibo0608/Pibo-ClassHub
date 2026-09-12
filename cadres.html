@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 蓝屏维护总控开关 -->
+    <script>
+        document.documentElement.style.visibility = 'hidden';
+        fetch('data/config.ini?t=' + new Date().getTime())
+            .then(response => {
+                if (!response.ok) throw new Error('配置文件不存在');
+                return response.text();
+            })
+            .then(text => {
+                const match = text.match(/maintenance\s*=\s*(\d+)/);
+                if (match && match[1] === '1') {
+                    window.location.href = '403.html';
+                } else {
+                    document.documentElement.style.visibility = 'visible';
+                }
+            })
+            .catch(err => {
+                console.log('配置文件读取失败，默认正常显示。');
+                document.documentElement.style.visibility = 'visible';
+            });
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级干部 - 25秋计算机综合2班</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="cadres.css">
+</head>
+<body>
+
+    <div id="fps-counter">0 FPS</div>
+
+    <div id="bg-slider">
+        <div class="bg-slide" style="background-image: url('Background/img1.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('Background/img2.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('Background/img3.jpg');"></div>
+    </div>
+
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="app-container" style="margin-top: 40px;">
+        <!-- 页面头部导航 -->
+        <div class="page-header">
+            <h1>👑 班级干部</h1>
+            <div class="header-btns">
+                <button class="font-toggle-btn" onclick="toggleFont()">🔤 切换字体</button>
+                <a href="index.html" class="back-btn">← 返回首页</a>
+            </div>
+        </div>
+
+        <!-- 干部卡片网格 -->
+        <div class="cadre-grid" id="cadre-grid">
+            <div style="text-align: center; padding: 40px; color: var(--text-muted);">正在加载班级干部信息...</div>
+        </div>
+
+        <!-- 🆕 预留空板块 -->
+        <div class="card" style="border-style: dashed; opacity: 0.7; text-align: center; padding: 30px; margin-top: 30px;">
+            <div style="color: var(--text-muted); font-size: 14px; font-family: var(--font-body);">
+                [ 班干部专属预留板块 ] <br>
+                用于展示班干部职责分工图或班级管理架构...
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 id="modal-name" class="highlight-name">姓名</h3>
+            <p><strong>职务：</strong><span id="modal-position"></span></p>
+            <p><strong>办公/所在位置：</strong><span id="modal-location"></span></p>
+            <p><strong>职责说明：</strong><span id="modal-duty"></span></p>
+            <button class="modal-close-btn" onclick="closeModal()">关 闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 字体切换逻辑
+        const fontThemes = ['theme-youyuan', 'theme-heiti', 'theme-jianzhi'];
+        let currentThemeIndex = 0;
+        function initFont() {
+            const saved = localStorage.getItem('fontTheme');
+            currentThemeIndex = (saved && fontThemes.includes(saved)) ? fontThemes.indexOf(saved) : 0;
+            document.body.classList.add(fontThemes[currentThemeIndex]);
+        }
+        function toggleFont() {
+            document.body.classList.remove(fontThemes[currentThemeIndex]);
+            currentThemeIndex = (currentThemeIndex + 1) % fontThemes.length;
+            document.body.classList.add(fontThemes[currentThemeIndex]);
+            localStorage.setItem('fontTheme', fontThemes[currentThemeIndex]);
+        }
+        initFont();
+
+        // FPS 计数器
+        let lastFpsUpdate = performance.now(); let frameCount = 0;
+        function fpsLoop() {
+            frameCount++; const now = performance.now();
+            if (now - lastFpsUpdate >= 1000) {
+                document.getElementById('fps-counter').textContent = Math.round((frameCount * 1000) / (now - lastFpsUpdate)) + ' FPS';
+                frameCount = 0; lastFpsUpdate = now;
+            }
+            requestAnimationFrame(fpsLoop);
+        }
+        requestAnimationFrame(fpsLoop);
+
+        // 深浅色主题
+        function applyTheme() {
+            const hours = new Date().getHours();
+            if (hours >= 18 || hours < 6) document.body.classList.add('dark-theme');
+            else document.body.classList.remove('dark-theme');
+        }
+        setInterval(applyTheme, 60000); applyTheme();
+
+        // 背景平移
+        const slides = document.querySelectorAll('.bg-slide');
+        let currentSlide = 0;
+        if (slides.length > 0) {
+            slides[0].classList.add('active'); 
+            setInterval(() => {
+                slides.forEach(s => s.classList.remove('active'));
+                currentSlide = (currentSlide + 1) % slides.length;
+                void slides[currentSlide].offsetWidth; 
+                slides[currentSlide].classList.add('active');
+            }, 30000); 
+        }
+
+        // 读取干部数据
+        fetch('data/personnel.json')
+            .then(res => res.json())
+            .then(data => {
+                const grid = document.getElementById('cadre-grid');
+                grid.innerHTML = '';
+                if (data.cadres && data.cadres.length > 0) {
+                    data.cadres.forEach(cadre => {
+                        const card = document.createElement('div');
+                        card.className = 'cadre-card';
+                        const nameHtml = `<a href="javascript:void(0)" onclick="showModal('${cadre.name}', '${cadre.position}', '${cadre.location}', '${cadre.duty}')">${cadre.name}</a>`;
+                        card.innerHTML = `
+                            <div class="cadre-name">${nameHtml}</div>
+                            <div class="cadre-position">💼 ${cadre.position}</div>
+                            <div class="cadre-location">📍 ${cadre.location}</div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                } else {
+                    grid.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-muted);">暂无数据</div>';
+                }
+            })
+            .catch(err => {
+                console.error('加载失败:', err);
+                document.getElementById('cadre-grid').innerHTML = '<div style="text-align: center; padding: 40px; color: red;">❌ 读取 data/personnel.json 失败</div>';
+            });
+
+        // 弹窗控制
+        function showModal(name, position, location, duty) {
+            document.getElementById('modal-name').textContent = name;
+            document.getElementById('modal-position').textContent = position;
+            document.getElementById('modal-location').textContent = location;
+            document.getElementById('modal-duty').textContent = duty;
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modal-overlay') || event.target.classList.contains('modal-close-btn')) {
+                document.getElementById('modal-overlay').classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>

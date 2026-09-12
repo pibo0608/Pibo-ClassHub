@@ -1,0 +1,6 @@
+{
+  "homework": [
+    { "subject": "语文", "content": "背诵《岳阳楼记》全文", "deadline": "明天早读" },
+    { "subject": "数学", "content": "练习册P12-P15", "deadline": "后天" }
+  ]
+}

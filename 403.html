@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统维护中 - 25秋计算机综合2班</title>
+    <style>
+        /* ==========================================
+           注册所有你提供的英文字体
+           ========================================== */
+        @font-face { font-family: 'Aller'; src: url('fonts/Aller.ttf') format('truetype'); }
+        @font-face { font-family: 'CyberpunkWaifus'; src: url('fonts/CyberpunkWaifus.ttf') format('truetype'); }
+        @font-face { font-family: 'Halogen'; src: url('fonts/Halogen.otf') format('opentype'); }
+        @font-face { font-family: 'HK Grotesk Bold'; src: url('fonts/HK Grotesk Bold.otf') format('opentype'); }
+        @font-face { font-family: 'Journal'; src: url('fonts/Journal.TTF') format('truetype'); }
+        @font-face { font-family: 'LanaPixel'; src: url('fonts/LanaPixel.ttf') format('truetype'); }
+        @font-face { font-family: 'Noto Sans JP Medium'; src: url('fonts/Noto Sans JP Medium.otf') format('opentype'); }
+        @font-face { font-family: 'Perfect DOS VGA 437 Win'; src: url('fonts/Perfect DOS VGA 437 Win.ttf') format('truetype'); }
+        @font-face { font-family: 'Pixel Arial 11 Bold'; src: url('fonts/Pixel Arial 11 Bold.otf') format('opentype'); }
+        @font-face { font-family: 'Riffic Free Bold'; src: url('fonts/Riffic Free Bold.ttf') format('truetype'); }
+        @font-face { font-family: 'Ubuntu Bold'; src: url('fonts/Ubuntu Bold.ttf') format('truetype'); }
+        @font-face { font-family: 'VCR OSD Mono'; src: url('fonts/VCR OSD Mono.ttf') format('truetype'); }
+
+        /* ==========================================
+           微软蓝屏风格
+           ========================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0078D7;
+            color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5vw;
+            overflow: hidden;
+            font-family: 'Segoe UI', 'Consolas', sans-serif;
+        }
+
+        .bsod-container { width: 100%; max-width: 800px; }
+        .bsod-face { font-size: 100px; font-weight: 300; margin-bottom: 20px; letter-spacing: -5px; user-select: none; }
+        .bsod-title { font-size: 28px; font-weight: 400; line-height: 1.3; margin-bottom: 30px; }
+        .bsod-progress { font-size: 18px; font-weight: 400; margin-bottom: 30px; }
+
+        .bsod-details {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px; line-height: 1.8; opacity: 0.9; margin-bottom: 40px;
+        }
+        .bsod-details strong { font-weight: 600; }
+
+        .bsod-actions { display: flex; gap: 20px; flex-wrap: wrap; justify-content: flex-start; }
+        .bsod-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #FFFFFF; padding: 12px 30px; font-size: 15px;
+            text-decoration: none; border-radius: 4px; transition: all 0.2s; font-weight: 500;
+        }
+        .bsod-btn:hover { background: rgba(255, 255, 255, 0.3); border-color: #FFFFFF; }
+
+        .cursor {
+            display: inline-block; width: 10px; height: 20px;
+            background: #FFF; animation: blink 1s step-end infinite;
+            vertical-align: bottom; margin-left: 5px;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        @media (max-width: 600px) {
+            .bsod-face { font-size: 70px; }
+            .bsod-title { font-size: 22px; }
+            .bsod-progress { font-size: 16px; }
+            .bsod-details { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bsod-container">
+        <div class="bsod-face">:(</div>
+        
+        <div class="bsod-title">
+            你的班级博客遇到了问题，需要重新启动。<br>
+            我们正在收集一些错误信息，然后为你重新启动。
+        </div>
+
+        <div class="bsod-progress" id="progress-text">
+            0% 完成<span class="cursor"></span>
+        </div>
+
+        <div class="bsod-details">
+            <p>停止代码: <strong id="stop-code">SITE_MAINTENANCE</strong></p>
+            <p>失败的操作: <strong id="failed-operation">Data_Update_By_Admin</strong></p>
+            <p>维护管理员: <strong>叶锋 (毗毘)</strong> · 25秋计算机综合2班</p>
+            <p>如需紧急协助，请访问: <a href="https://link3.cc/pibo" target="_blank" style="color:#FFF; text-decoration:underline;">link3.cc/pibo</a></p>
+        </div>
+
+        <div class="bsod-actions">
+            <a href="javascript:location.reload()" class="bsod-btn">重新加载页面 (重试)</a>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. 随机挑选英文蓝屏字体
+        // ==========================================
+        const englishFonts = [
+            'Aller', 'CyberpunkWaifus', 'Halogen', 'HK Grotesk Bold', 
+            'Journal', 'LanaPixel', 'Noto Sans JP Medium', 'Perfect DOS VGA 437 Win', 
+            'Pixel Arial 11 Bold', 'Riffic Free Bold', 'Ubuntu Bold', 'VCR OSD Mono'
+        ];
+        const randomFont = englishFonts[Math.floor(Math.random() * englishFonts.length)];
+        document.body.style.fontFamily = `'${randomFont}', 'Consolas', 'Courier New', monospace`;
+        console.log(`本次蓝屏随机字体: ${randomFont}`);
+
+        // ==========================================
+        // 2. 从 data/403.json 读取随机蓝屏文案
+        // ==========================================
+        // 备用默认数据（防本地双击打开时读不到 JSON 导致卡死）
+        const fallbackData = {
+            stopCodes: ['SITE_MAINTENANCE', 'CLASS_BLOG_OFFLINE', 'CRITICAL_PROCESS_DIED'],
+            failedOps: ['Data_Update_By_Admin', 'Sync_Timetable_And_Duty', 'Database_Backup_Failed'],
+            progressStages: [
+                ["0% 完成"], ["10% 完成 - 正在准备数据更新"], ["25% 完成 - 正在验证值日表"],
+                ["45% 完成 - 正在校验班级干部信息"], ["65% 完成 - 正在写入缓存"],
+                ["85% 完成 - 正在等待服务器响应"], ["100% 完成 - 数据已就绪，等待管理员重新开服"]
+            ]
+        };
+
+        const progressText = document.getElementById('progress-text');
+        
+        // 尝试 fetch 请求 data/403.json
+        fetch('data/403.json?t=' + new Date().getTime())
+            .then(res => res.json())
+            .then(data => {
+                initBsod(data);
+            })
+            .catch(err => {
+                console.warn('读取 data/403.json 失败，使用内置默认数据。');
+                initBsod(fallbackData);
+            });
+
+        // 蓝屏初始化逻辑
+        function initBsod(data) {
+            // 2.1 随机抽取停止代码和失败操作
+            document.getElementById('stop-code').textContent = data.stopCodes[Math.floor(Math.random() * data.stopCodes.length)];
+            document.getElementById('failed-operation').textContent = data.failedOps[Math.floor(Math.random() * data.failedOps.length)];
+
+            // 2.2 启动加载进度条模拟
+            const progressStages = data.progressStages;
+            
+            // 初始化第一句
+            progressText.innerHTML = progressStages[0][Math.floor(Math.random() * progressStages[0].length)] + '<span class="cursor"></span>';
+
+            let step = 1;
+            const interval = setInterval(() => {
+                if (step < progressStages.length) {
+                    const randomMessage = progressStages[step][Math.floor(Math.random() * progressStages[step].length)];
+                    progressText.innerHTML = randomMessage + '<span class="cursor"></span>';
+                    step++;
+                }
+                if (step >= progressStages.length) {
+                    clearInterval(interval);
+                    const finalMessages = progressStages[progressStages.length - 1];
+                    progressText.innerHTML = finalMessages[Math.floor(Math.random() * finalMessages.length)] + '<span class="cursor"></span>';
+                }
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

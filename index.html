@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script>
+        document.documentElement.style.visibility = 'hidden';
+        fetch('data/config.ini?t=' + new Date().getTime())
+            .then(response => { if (!response.ok) throw new Error(); return response.text(); })
+            .then(text => {
+                const match = text.match(/maintenance\s*=\s*(\d+)/);
+                if (match && match[1] === '1') window.location.href = '403.html';
+                else document.documentElement.style.visibility = 'visible';
+            })
+            .catch(() => { document.documentElement.style.visibility = 'visible'; });
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>25秋计算机综合2班 - 青春班级博客</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <div id="fps-counter">0 FPS</div>
+
+    <div id="bg-slider">
+        <div class="bg-slide" style="background-image: url('Background/img1.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('Background/img2.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('Background/img3.jpg');"></div>
+    </div>
+
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="app-container">
+        <header class="hero-header">
+            <div class="hero-info">
+                <h1>25秋计算机综合2班</h1>
+                <p>📍 安徽芜湖技师学院 · 教室：201</p>
+            </div>
+            <div class="hero-time">
+                <div class="greeting" id="greeting-text">你好</div>
+                <div class="weather-badge" id="weather-display">⏳ 天气加载中...</div>
+                <div class="date" id="date-display">正在同步网络时间...</div>
+                <div class="clock" id="clock-display">--:--:--</div>
+                <!-- 倒计时胶囊 -->
+                <div class="weather-badge" id="countdown-display" style="background: rgba(255, 200, 100, 0.4);">⏳ 倒计时加载中...</div>
+                <button class="font-toggle-btn" onclick="toggleFont()">🔤 切换字体</button>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header"><span class="icon">📚</span> 今日课程</div>
+                <div id="today-courses"><div style="color:var(--text-muted);font-size:14px;text-align:center;padding:20px 0;">数据加载中...</div></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="icon">🧹</span> 今日值日</div>
+                <div id="today-duty"><div style="color:var(--text-muted);font-size:14px;text-align:center;padding:20px 0;">数据加载中...</div></div>
+            </div>
+        </div>
+
+        <!-- 今日作业看板 -->
+        <div class="card">
+            <div class="card-header"><span class="icon">📝</span> 今日作业</div>
+            <div id="today-homework">
+                <div style="color:var(--text-muted);font-size:14px;text-align:center;padding:20px 0;">数据加载中...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="icon">📢</span> 班级提醒</div>
+            <div class="rules-box" id="rules-content">正在加载提醒事项...</div>
+        </div>
+
+        <div class="accordion-btn" onclick="toggleAccordion(this)">
+            <span>📅 展开查看完整周表（值日 + 课表）</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;">
+                <path id="arrow-path" d="M6 9l6 6 6-6"></path>
+            </svg>
+        </div>
+
+        <div class="accordion-content" id="full-tables">
+            <h3 style="margin-bottom: 15px; font-size: 16px; color: var(--text-main);">🗓️ 完整值日安排表</h3>
+            <div class="table-wrapper">
+                <table id="duty-table">
+                    <thead><tr><th>星期</th><th>组长</th><th>成员1</th><th>成员2</th><th>成员3</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <h3 style="margin: 30px 0 15px 0; font-size: 16px; color: var(--text-main);">⏰ 完整课程作息表</h3>
+            <div class="table-wrapper">
+                <table id="course-table">
+                    <thead><tr><th>节次</th><th>时间</th><th>周一</th><th>周二</th><th>周三</th><th>周四</th><th>周五</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 各类跳转入口 -->
+        <a href="cadres.html" style="display: block; text-align: center; margin-top: 10px; text-decoration: none;">
+            <div class="card" style="cursor: pointer; padding: 15px; flex-direction: row; justify-content: center; align-items: center; gap: 10px; color: var(--text-main); font-family: var(--font-title); font-weight: bold;">
+                👑 查看班级干部名单 👉
+            </div>
+        </a>
+
+        <a href="picker.html" style="display: block; text-align: center; margin-top: 10px; text-decoration: none;">
+            <div class="card" style="cursor: pointer; padding: 15px; flex-direction: row; justify-content: center; align-items: center; gap: 10px; color: var(--text-main); font-family: var(--font-title); font-weight: bold;">
+                🎲 打开随机点名器 👉
+            </div>
+        </a>
+
+        <a href="devlog.html" style="display: block; text-align: center; margin-top: 10px; text-decoration: none;">
+            <div class="card" style="cursor: pointer; padding: 15px; flex-direction: row; justify-content: center; align-items: center; gap: 10px; color: var(--text-main); font-family: var(--font-title); font-weight: bold;">
+                📖 查看开发文稿 👉
+            </div>
+        </a>
+
+        <footer class="page-footer">
+            <p>本页面由 <a href="https://link3.cc/pibo" target="_blank">叶锋</a> 制作，由 <a href="https://link3.cc/pibo" target="_blank">叶锋</a> 构思。</p>
+            <p>笔名：<a href="https://github.com/pibo0608" target="_blank">毗毘</a> | 源码：<a href="https://github.com/pibo0608" target="_blank">点击访问 GitHub 仓库</a></p>
+            <p>© 2026 25秋计算机综合2班</p>
+        </footer>
+    </div>
+
+    <script src="script.js" defer></script>
+    
+    <script type="module">
+        import { createMorph } from './js/morphicons.esm.js';
+        const arrowPath = document.getElementById('arrow-path');
+        const downPath = "M6 9l6 6 6-6";
+        const upPath = "M18 15l-6-6-6 6";
+        const morph = createMorph(arrowPath, downPath);
+        window.toggleAccordion = function(btn) {
+            const content = document.getElementById('full-tables');
+            content.classList.toggle('open');
+            btn.classList.toggle('open');
+            const currentD = arrowPath.getAttribute('d');
+            morph.morphTo(currentD === downPath ? upPath : downPath, "snappy");
+        };
+    </script>
+
+    <!-- 新增：倒计时与作业看板逻辑 -->
+    <script>
+        // 1. 倒计时逻辑（目标日期改为期末考试/放假日期）
+        function updateCountdown() {
+            const targetDate = new Date('2027-01-15T00:00:00'); // 修改这里：倒计时的目标日期
+            const now = new Date();
+            const diff = targetDate - now;
+            
+            if (diff <= 0) {
+                document.getElementById('countdown-display').textContent = '🎉 假期已至！';
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown-display').textContent = `⏳ 距期末还有 ${days} 天`;
+        }
+        setInterval(updateCountdown, 1000 * 60 * 60); // 每小时更新一次
+        updateCountdown();
+
+        // 2. 作业看板渲染
+        fetch('data/homework.json')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('today-homework');
+                if (data.homework && data.homework.length > 0) {
+                    container.innerHTML = '';
+                    data.homework.forEach(hw => {
+                        container.innerHTML += `
+                            <div class="course-item" style="padding: 10px 0;">
+                                <div class="course-time" style="min-width: 60px; font-weight: bold; color: #6366f1;">${hw.subject}</div>
+                                <div class="course-info">
+                                    <span class="course-subject" style="font-size: 14px;">${hw.content}</span>
+                                    <span class="course-teacher" style="font-size: 12px;">⏰ 截止：${hw.deadline}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<div style="color:var(--text-muted);font-size:14px;text-align:center;padding:20px 0;">今日无作业，好好放松！🎉</div>';
+                }
+            })
+            .catch(() => {
+                document.getElementById('today-homework').innerHTML = '<div style="color:red;font-size:14px;text-align:center;padding:20px 0;">❌ 读取作业数据失败</div>';
+            });
+    </script>
+</body>
+</html>

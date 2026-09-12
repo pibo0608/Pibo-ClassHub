@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 蓝屏维护总控开关 -->
+    <script>
+        document.documentElement.style.visibility = 'hidden';
+        fetch('data/config.ini?t=' + new Date().getTime())
+            .then(res => res.text())
+            .then(text => {
+                const match = text.match(/maintenance\s*=\s*(\d+)/);
+                if (match && match[1] === '1') {
+                    window.location.href = '403.html';
+                } else {
+                    document.documentElement.style.visibility = 'visible';
+                }
+            })
+            .catch(() => { document.documentElement.style.visibility = 'visible'; });
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机点名 - 25秋计算机综合2班</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .picker-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            gap: 30px;
+            text-align: center;
+        }
+
+        .picker-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(35px) saturate(200%);
+            -webkit-backdrop-filter: blur(35px) saturate(200%);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 50px 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--card-shadow), inset 0 2px 0 rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .name-display {
+            font-family: var(--font-title);
+            font-size: 60px;
+            font-weight: bold;
+            color: var(--text-main);
+            height: 80px;
+            line-height: 80px;
+            letter-spacing: 4px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.1s;
+        }
+
+        .name-display.rolling {
+            color: #6366f1;
+            transform: scale(1.1);
+        }
+
+        .picker-btn {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 154, 158, 0.4);
+            transition: var(--transition);
+        }
+        .picker-btn:hover { transform: scale(1.05) translateY(-3px); box-shadow: 0 12px 30px rgba(255, 154, 158, 0.6); }
+        .picker-btn:active { transform: scale(0.95); }
+
+        .back-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 10px 24px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+        .back-btn:hover { background: var(--primary-gradient); color: #fff; }
+        
+        .count-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: -10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="fps-counter">0 FPS</div>
+
+    <div id="bg-slider">
+        <div class="bg-slide" style="background-image: url('Background/img1.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('Background/img2.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('Background/img3.jpg');"></div>
+    </div>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="app-container" style="margin-top: 40px;">
+        <div class="picker-container">
+            <div class="picker-card">
+                <h1 style="font-family: var(--font-title); font-size: 24px; color: var(--text-main);">🎲 随机点名</h1>
+                <div class="name-display" id="name-display">准备就绪</div>
+                <div class="count-hint" id="count-hint"></div>
+                <button class="picker-btn" id="picker-btn" onclick="togglePick()">开始点名</button>
+                <a href="index.html" class="back-btn">← 返回首页</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let students = [];
+        let isPicking = false;
+        let pickInterval = null;
+
+        // FPS 计数器
+        let lastFpsUpdate = performance.now(); let frameCount = 0;
+        function fpsLoop() {
+            frameCount++; const now = performance.now();
+            if (now - lastFpsUpdate >= 1000) {
+                document.getElementById('fps-counter').textContent = Math.round((frameCount * 1000) / (now - lastFpsUpdate)) + ' FPS';
+                frameCount = 0; lastFpsUpdate = now;
+            }
+            requestAnimationFrame(fpsLoop);
+        }
+        requestAnimationFrame(fpsLoop);
+
+        // 深浅色主题
+        function applyTheme() {
+            const hours = new Date().getHours();
+            if (hours >= 18 || hours < 6) document.body.classList.add('dark-theme');
+            else document.body.classList.remove('dark-theme');
+        }
+        setInterval(applyTheme, 60000); applyTheme();
+
+        // 背景平移
+        const slides = document.querySelectorAll('.bg-slide');
+        let currentSlide = 0;
+        if (slides.length > 0) {
+            slides[0].classList.add('active'); 
+            setInterval(() => {
+                slides.forEach(s => s.classList.remove('active'));
+                currentSlide = (currentSlide + 1) % slides.length;
+                void slides[currentSlide].offsetWidth; 
+                slides[currentSlide].classList.add('active');
+            }, 30000); 
+        }
+
+        // 读取学生名单
+        fetch('data/student.json?t=' + new Date().getTime())
+            .then(res => res.json())
+            .then(data => {
+                if (data.students && data.students.length > 0) {
+                    students = data.students;
+                    document.getElementById('count-hint').textContent = `已加载 ${students.length} 名同学`;
+                } else {
+                    document.getElementById('name-display').textContent = '无数据';
+                    document.getElementById('count-hint').textContent = '名单为空，请检查 JSON';
+                }
+            })
+            .catch(err => {
+                console.error('读取 student.json 失败:', err);
+                students = ['数据加载失败'];
+                document.getElementById('count-hint').textContent = '读取名单失败，请检查网络或文件';
+            });
+
+        function togglePick() {
+            const display = document.getElementById('name-display');
+            const btn = document.getElementById('picker-btn');
+
+            if (students.length === 0 || students[0] === '数据加载失败') {
+                alert('无法获取学生名单，请检查 data/student.json 是否存在！');
+                return;
+            }
+
+            if (!isPicking) {
+                isPicking = true;
+                btn.textContent = '停 止';
+                display.classList.add('rolling');
+                
+                pickInterval = setInterval(() => {
+                    const randomIndex = Math.floor(Math.random() * students.length);
+                    display.textContent = students[randomIndex];
+                }, 50); // 每50毫秒换一个名字
+            } else {
+                clearInterval(pickInterval);
+                isPicking = false;
+                btn.textContent = '重新点名';
+                display.classList.remove('rolling');
+                
+                // 最终定格（再随机一次，保证公平）
+                const finalIndex = Math.floor(Math.random() * students.length);
+                display.textContent = students[finalIndex];
+            }
+        }
+    </script>
+</body>
+</html>

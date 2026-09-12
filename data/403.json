@@ -1,0 +1,71 @@
+{
+  "stopCodes": [
+    "SITE_MAINTENANCE",
+    "DATA_UPDATE_IN_PROGRESS",
+    "CLASS_BLOG_OFFLINE",
+    "CRITICAL_PROCESS_DIED",
+    "KERNEL_SECURITY_CHECK_FAILURE",
+    "DRIVER_IRQL_NOT_LESS_OR_EQUAL",
+    "PAGE_FAULT_IN_NONPAGED_AREA",
+    "MEMORY_MANAGEMENT",
+    "SYSTEM_SERVICE_EXCEPTION",
+    "UNEXPECTED_KERNEL_MODE_TRAP",
+    "BAD_SYSTEM_CONFIG_INFO",
+    "HAL_INITIALIZATION_FAILED"
+  ],
+  "failedOps": [
+    "Data_Update_By_Admin",
+    "Sync_Timetable_And_Duty",
+    "Fetching_Personnel_Data",
+    "Database_Backup_Failed",
+    "Config_Ini_Read_Error",
+    "Personnel_Validation_Failed",
+    "Scanning_For_Vulnerabilities",
+    "Checking_System_Integrity",
+    "Rebuilding_Data_Index",
+    "Recovering_Corrupted_Blocks",
+    "Reloading_Static_Resources"
+  ],
+  "progressStages": [
+    [
+      "0% 完成 - 正在初始化崩溃诊断模块",
+      "0% 完成 - 正在收集系统错误信息",
+      "0% 完成 - 启动紧急修复协议"
+    ],
+    [
+      "10% 完成 - 正在准备数据更新",
+      "12% 完成 - 正在读取 config.ini 总控开关",
+      "15% 完成 - 正在校验管理员身份",
+      "18% 完成 - 正在建立安全沙盒环境"
+    ],
+    [
+      "25% 完成 - 正在验证值日表数据完整性",
+      "28% 完成 - 正在扫描数据文件中的漏洞",
+      "30% 完成 - 正在检查课程表序列号",
+      "33% 完成 - 正在比对班级干部指纹库"
+    ],
+    [
+      "45% 完成 - 正在校验班级干部信息",
+      "48% 完成 - 正在尝试恢复损坏的数据块",
+      "50% 完成 - 正在备份旧的 JSON 配置",
+      "55% 完成 - 正在检测数据库索引是否损坏"
+    ],
+    [
+      "65% 完成 - 正在写入临时缓存文件",
+      "70% 完成 - 正在清理无效的历史日志",
+      "72% 完成 - 正在重新编译静态资源",
+      "75% 完成 - 正在修复断开的超链接"
+    ],
+    [
+      "85% 完成 - 正在等待服务器底层响应",
+      "88% 完成 - 正在重新加载前端渲染模块",
+      "90% 完成 - 正在重启应用服务集群",
+      "92% 完成 - 正在重新挂载静态文件目录"
+    ],
+    [
+      "100% 完成 - 数据已就绪，等待管理员重新开服",
+      "100% 完成 - 系统诊断完毕，请等待管理员执行覆盖上传",
+      "100% 完成 - 所有错误已记录，正在等待管理员重启服务"
+    ]
+  ]
+}

@@ -1,0 +1,3 @@
+[SiteStatus]
+# 1 代表蓝屏维护，0 代表正常显示
+maintenance = 1
